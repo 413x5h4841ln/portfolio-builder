@@ -6,6 +6,8 @@ import pandas as pd
 from sqlalchemy import select
 from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.orm import Session
+from sqlalchemy import func
+from sqlalchemy import delete
 
 from portfolio_builder.data.models import DailyPrice
 
@@ -117,3 +119,54 @@ def upsert_prices_to_db(
 
     session.execute(update_statement)
     session.commit()
+
+def list_cached_tickers(session: Session) -> pd.DataFrame:
+    """
+    Return one row per cached ticker.
+
+    Columns:
+        ticker
+        start_date
+        end_date
+        rows
+    """
+    statement = (
+        select(
+            DailyPrice.ticker,
+            func.min(DailyPrice.date).label("start_date"),
+            func.max(DailyPrice.date).label("end_date"),
+            func.count(DailyPrice.date).label("rows"),
+        )
+        .group_by(DailyPrice.ticker)
+        .order_by(DailyPrice.ticker)
+    )
+
+    rows = session.execute(statement).all()
+
+    if not rows:
+        return pd.DataFrame(
+            columns=["ticker", "start_date", "end_date", "rows"]
+        )
+
+    return pd.DataFrame(
+        rows,
+        columns=["ticker", "start_date", "end_date", "rows"],
+    )
+
+def delete_ticker_prices(
+    session: Session,
+    ticker: str,
+) -> int:
+    """
+    Delete all cached prices for one ticker.
+
+    Returns the number of deleted rows.
+    """
+    ticker = ticker.upper().strip()
+
+    statement = delete(DailyPrice).where(DailyPrice.ticker == ticker)
+
+    result = session.execute(statement)
+    session.commit()
+
+    return result.rowcount or 0
