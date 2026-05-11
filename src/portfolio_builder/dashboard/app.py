@@ -3,9 +3,8 @@
 from datetime import date, timedelta
 
 import pandas as pd
-from pandas.io.formats.style import Styler
-
 import streamlit as st
+from pandas.io.formats.style import Styler
 
 from portfolio_builder.analytics.optimizer import (
     efficient_frontier,

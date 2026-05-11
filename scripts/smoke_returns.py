@@ -1,9 +1,9 @@
-from portfolio_builder.data.price_service import get_price_history
 from portfolio_builder.analytics.returns import (
-    calculate_daily_returns,
-    annualized_mean_returns,
     annualized_covariance,
+    annualized_mean_returns,
+    calculate_daily_returns,
 )
+from portfolio_builder.data.price_service import get_price_history
 
 prices = get_price_history(
     ["AAPL", "MSFT", "NVDA"],

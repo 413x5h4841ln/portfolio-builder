@@ -37,7 +37,9 @@ def portfolio_daily_returns(
     return returns
 
 
-def cumulative_returns(daily_returns: pd.Series | pd.DataFrame) -> pd.Series | pd.DataFrame:
+def cumulative_returns(
+    daily_returns: pd.Series | pd.DataFrame,
+) -> pd.Series | pd.DataFrame:
     """
     Convert daily returns into cumulative returns.
     """

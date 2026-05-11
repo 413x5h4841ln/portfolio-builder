@@ -4,8 +4,8 @@ import pandas as pd
 import pytest
 
 from portfolio_builder.analytics.returns import (
-    calculate_daily_returns,
     calculate_cumulative_returns,
+    calculate_daily_returns,
 )
 
 

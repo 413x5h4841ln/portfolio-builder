@@ -5,7 +5,6 @@ from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
-
 DB_PATH = Path("data/portfolio_builder.sqlite")
 DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 

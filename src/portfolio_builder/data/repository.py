@@ -3,11 +3,9 @@
 from datetime import date
 
 import pandas as pd
-from sqlalchemy import select
+from sqlalchemy import delete, func, select
 from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.orm import Session
-from sqlalchemy import func
-from sqlalchemy import delete
 
 from portfolio_builder.data.models import DailyPrice
 
@@ -120,6 +118,7 @@ def upsert_prices_to_db(
     session.execute(update_statement)
     session.commit()
 
+
 def list_cached_tickers(session: Session) -> pd.DataFrame:
     """
     Return one row per cached ticker.
@@ -144,14 +143,13 @@ def list_cached_tickers(session: Session) -> pd.DataFrame:
     rows = session.execute(statement).all()
 
     if not rows:
-        return pd.DataFrame(
-            columns=["ticker", "start_date", "end_date", "rows"]
-        )
+        return pd.DataFrame(columns=["ticker", "start_date", "end_date", "rows"])
 
     return pd.DataFrame(
         rows,
         columns=["ticker", "start_date", "end_date", "rows"],
     )
+
 
 def delete_ticker_prices(
     session: Session,

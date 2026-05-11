@@ -7,11 +7,12 @@ import pandas as pd
 from portfolio_builder.data.db import SessionLocal, init_db
 from portfolio_builder.data.provider import download_adjusted_close
 from portfolio_builder.data.repository import (
+    delete_ticker_prices,
+    list_cached_tickers,
     read_prices_from_db,
     upsert_prices_to_db,
-    list_cached_tickers,
-    delete_ticker_prices,
 )
+
 
 def _normalize_tickers(tickers: list[str]) -> list[str]:
     return sorted({ticker.upper().strip() for ticker in tickers if ticker.strip()})
@@ -142,6 +143,7 @@ def get_price_history(
 
     return final_prices.dropna(how="all")
 
+
 def get_cache_summary() -> pd.DataFrame:
     """
     Return a summary of locally cached price data.
@@ -150,6 +152,7 @@ def get_cache_summary() -> pd.DataFrame:
 
     with SessionLocal() as session:
         return list_cached_tickers(session)
+
 
 def clear_cached_ticker(ticker: str) -> int:
     """

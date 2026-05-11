@@ -67,7 +67,7 @@ def _make_result(
 
     cleaned_weights = {
         ticker: float(round(weight, 6))
-        for ticker, weight in zip(mean_returns.index, weights)
+        for ticker, weight in zip(mean_returns.index, weights, strict=True)
         if abs(weight) > 1e-6
     }
 
@@ -233,9 +233,8 @@ def efficient_frontier(
             {
                 "type": "eq",
                 "fun": lambda weights, target=target_return: (
-                    weights @ mean_returns.values
-                )
-                - target,
+                    (weights @ mean_returns.values) - target
+                ),
             },
         )
 
@@ -269,7 +268,7 @@ def efficient_frontier(
             "sharpe_ratio": sharpe_ratio,
         }
 
-        for ticker, weight in zip(mean_returns.index, weights):
+        for ticker, weight in zip(mean_returns.index, weights, strict=True):
             row[ticker] = float(weight)
 
         frontier_rows.append(row)
